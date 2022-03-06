@@ -23,7 +23,7 @@ def lire_sms():
             sms_recu.touch()
             chat_messages = services.fetch_chat_history(message, 0, 100)
             chat_messages.reverse()
-            indicatif = f"\nmessage envoyé par le teléphone N° {tel}.\n"
+            indicatif = f"\n####### message envoyé par le teléphone N° {tel}. #######\n"
             a = 0
             print(indicatif)
             with open(sms_recu, "a") as f:
