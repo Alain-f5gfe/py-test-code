@@ -1,11 +1,11 @@
 #!~/Sms_read_send/.venv/bin/python3.9
-# transfert message SMS via un smartphone équipé de AirMore
+# transfert message SMS via un smartphone equipe de AirMore
 import sys
 import json
 from ipaddress import IPv4Address
 from pyairmore.request import AirmoreSession
 from pyairmore.services.messaging import MessagingService
-
+from pathlib import Path
 
 ip = IPv4Address("192.168.1.24")  # Ip du smartphone sur le lan au format IPv4
 session = AirmoreSession(ip)
@@ -18,10 +18,24 @@ def lire_sms():
     for message in messages:
         tel = message.phone
         if message:
+            home = Path.home()
+            sms_recu = home /"Bureau"/"Sms_reçu.txt"
+            sms_recu.touch()
             chat_messages = services.fetch_chat_history(message, 0, 100)
             chat_messages.reverse()
-            print(f"\nmessage envoyé par le teléphone N° {tel}.")
-            print(chat_messages[0].content)
+            indicatif = f"\nmessage envoyé par le teléphone N° {tel}.\n"
+            a = 0
+            print(indicatif)
+            with open(sms_recu, "a") as f:
+                f.write(indicatif)
+                f.write("\n")
+                for obj in chat_messages:
+                    texte = chat_messages[a].content
+                    print(texte)
+                    f.write(texte)
+                    f.write("\n")
+                    a = a+1
+
 
 
 def filtre_numero_tel(tel_filtre):
